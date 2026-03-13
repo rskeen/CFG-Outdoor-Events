@@ -1,0 +1,8 @@
+[deploy]
+startCommand = "python main.py"
+
+[[services]]
+name = "scraper"
+
+[services.cron]
+schedule = "0 8 1,15 * *"

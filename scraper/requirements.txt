@@ -1,0 +1,8 @@
+anthropic
+supabase
+beautifulsoup4
+lxml
+playwright
+requests
+python-dotenv
+geopy
