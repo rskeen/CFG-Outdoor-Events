@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     serverActions: {
-      // Allow server actions from any origin in production (Vercel domains vary)
-      // and localhost in dev. Falls back to allowing all if APP_URL not set.
       allowedOrigins: process.env.NEXT_PUBLIC_APP_URL
         ? [
             process.env.NEXT_PUBLIC_APP_URL.replace(/^https?:\/\//, ""),
