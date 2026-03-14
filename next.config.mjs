@@ -2,7 +2,14 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000"],
+      // Allow server actions from any origin in production (Vercel domains vary)
+      // and localhost in dev. Falls back to allowing all if APP_URL not set.
+      allowedOrigins: process.env.NEXT_PUBLIC_APP_URL
+        ? [
+            process.env.NEXT_PUBLIC_APP_URL.replace(/^https?:\/\//, ""),
+            "localhost:3000",
+          ]
+        : ["localhost:3000"],
     },
   },
   images: {
