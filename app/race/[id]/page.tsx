@@ -2,10 +2,9 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { formatDate, formatDistance } from "@/lib/utils"
 import { RegisterButton } from "./register-button"
-import type { Race, Registration, Profile } from "@/lib/types"
+import type { Race, Registration } from "@/lib/types"
 import {
   MapPin,
   Navigation,
