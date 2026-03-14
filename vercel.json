@@ -1,5 +1,4 @@
 {
-  "name": "cfg_outdoor_events",
   "crons": [
     {
       "path": "/api/cron/reminders",
