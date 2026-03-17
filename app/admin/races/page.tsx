@@ -13,7 +13,7 @@ import {
 import { RaceForm } from "./race-form"
 import { formatDate } from "@/lib/utils"
 import type { Race } from "@/lib/types"
-import { Plus, Pencil } from "lucide-react"
+import { Plus, Pencil, Trash2 } from "lucide-react"
 
 export default function AdminRacesPage() {
   const [races, setRaces] = useState<Race[]>([])
@@ -58,6 +58,13 @@ export default function AdminRacesPage() {
   const openEdit = (race: Race) => {
     setEditingRace(race)
     setDialogOpen(true)
+  }
+  const handleDelete = async (race: Race) => {
+    if (!confirm(`Delete "${race.name}"? This cannot be undone.`)) return
+    const res = await fetch(`/api/admin/races/${race.id}`, { method: "DELETE" })
+    if (res.ok) {
+      setRaces((prev) => prev.filter((r) => r.id !== race.id))
+    }
   }
 
   return (
@@ -137,6 +144,15 @@ export default function AdminRacesPage() {
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
+                                      <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(race)}
+                      className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+
                   </td>
                 </tr>
               ))}
