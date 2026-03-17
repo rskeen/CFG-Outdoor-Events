@@ -11,13 +11,14 @@ import {
 } from "@/components/ui/dialog"
 import { AddSourceForm } from "./add-source-form"
 import type { ScraperSource } from "@/lib/types"
-import { Plus, Play, AlertCircle } from "lucide-react"
+import { Plus, Play, AlertCircle, Trash2 } from "lucide-react"
 
 export default function AdminSourcesPage() {
   const [sources, setSources] = useState<ScraperSource[]>([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [runningId, setRunningId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const loadSources = async () => {
     setLoading(true)
@@ -53,6 +54,16 @@ export default function AdminSourcesPage() {
     await fetch(`/api/admin/sources/${source.id}/run`, { method: "POST" })
     setRunningId(null)
     loadSources()
+  }
+
+  const handleDelete = async (source: ScraperSource) => {
+    if (!confirm(`Delete source "${source.name}"? This cannot be undone.`)) return
+    setDeletingId(source.id)
+    const res = await fetch(`/api/admin/sources/${source.id}`, { method: "DELETE" })
+    if (res.ok) {
+      setSources((prev) => prev.filter((s) => s.id !== source.id))
+    }
+    setDeletingId(null)
   }
 
   return (
@@ -119,7 +130,7 @@ export default function AdminSourcesPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <Switch
                     checked={source.active}
                     onCheckedChange={() => handleToggleActive(source)}
@@ -133,6 +144,15 @@ export default function AdminSourcesPage() {
                   >
                     <Play className="h-3.5 w-3.5" />
                     {runningId === source.id ? "Running..." : "Run Now"}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(source)}
+                    disabled={deletingId === source.id}
+                    className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
