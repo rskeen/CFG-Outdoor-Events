@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { RaceList } from "@/components/race/race-list"
 import type { Race } from "@/lib/types"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 export default async function Home() {
   const supabase = createClient()
