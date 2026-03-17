@@ -197,7 +197,7 @@ export default async function RacePage({ params }: PageProps) {
                 href={r.race_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 flex items-center justify-center gap-2 w-full rounded-md px-4 py-2 text-sm text-[#8a9e8a] hover:text-[#e8ede8] transition-colors"
+                className="mt-2 flex items-center justify-center gap-2 w-full rounded-md border border-[#2e4530] px-4 py-2 text-sm text-[#7cb87a] hover:bg-[#243826] hover:text-[#e8ede8] transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
                 Race Website
