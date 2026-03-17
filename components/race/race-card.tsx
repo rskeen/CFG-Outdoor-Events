@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { MapPin, Users, Navigation } from "lucide-react"
+import { MapPin, Users, Navigation, ExternalLink } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { formatDate, formatDistance } from "@/lib/utils"
@@ -147,6 +147,21 @@ export function RaceCard({ race, currentUserId }: RaceCardProps) {
               : "Be the first!"}
           </span>
         </div>
+                {(race.registration_url || race.race_url) && (
+          <div className="mt-2">
+            <a
+              href={race.registration_url ?? race.race_url ?? ""}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 text-xs text-[#7cb87a] hover:text-[#d4845a] transition-colors"
+            >
+              <ExternalLink className="h-3 w-3" />
+              {race.registration_url ? "Register" : "Race Info"}
+            </a>
+          </div>
+        )}
+
       </div>
     </div>
   )
