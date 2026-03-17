@@ -26,12 +26,8 @@ interface RaceCardProps {
 
 export function RaceCard({ race, currentUserId }: RaceCardProps) {
   const router = useRouter()
-  const [isRegistered, setIsRegistered] = useState(
-    race.user_registered ?? false
-  )
-  const [registrationCount, setRegistrationCount] = useState(
-    race.registration_count ?? 0
-  )
+  const [isRegistered, setIsRegistered] = useState(race.user_registered ?? false)
+  const [registrationCount, setRegistrationCount] = useState(race.registration_count ?? 0)
   const [loading, setLoading] = useState(false)
 
   const borderColor = typeColors[race.race_type ?? "other"] ?? typeColors.other
@@ -50,14 +46,12 @@ export function RaceCard({ race, currentUserId }: RaceCardProps) {
     const prevRegistered = isRegistered
     const prevCount = registrationCount
 
-    // Optimistic update
     setIsRegistered(!isRegistered)
     setRegistrationCount((c) => (isRegistered ? c - 1 : c + 1))
 
     try {
       const res = await fetch(`/api/races/${race.id}/register`, { method })
       if (!res.ok) {
-        // Revert
         setIsRegistered(prevRegistered)
         setRegistrationCount(prevCount)
       } else {
@@ -86,10 +80,7 @@ export function RaceCard({ race, currentUserId }: RaceCardProps) {
       }}
     >
       {/* Left colored border */}
-      <div
-        className="w-1 flex-shrink-0"
-        style={{ backgroundColor: borderColor }}
-      />
+      <div className="w-1 flex-shrink-0" style={{ backgroundColor: borderColor }} />
 
       <div className="flex-1 p-4">
         <div className="flex items-start justify-between gap-3">
@@ -128,40 +119,32 @@ export function RaceCard({ race, currentUserId }: RaceCardProps) {
           {(race.location_city || race.location_state) && (
             <span className="flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" />
-              {[race.location_city, race.location_state]
-                .filter(Boolean)
-                .join(", ")}
+              {[race.location_city, race.location_state].filter(Boolean).join(", ")}
             </span>
           )}
           {race.distance_miles_from_woodstock != null && (
             <span className="flex items-center gap-1">
               <Navigation className="h-3.5 w-3.5" />
-              {formatDistance(race.distance_miles_from_woodstock)} from
-              Woodstock
+              {formatDistance(race.distance_miles_from_woodstock)} from Woodstock
             </span>
           )}
           <span className="flex items-center gap-1">
             <Users className="h-3.5 w-3.5" />
-            {registrationCount > 0
-              ? `${registrationCount} going`
-              : "Be the first!"}
+            {registrationCount > 0 ? `${registrationCount} going` : "Be the first!"}
           </span>
-        </div>
-                {(race.registration_url || race.race_url) && (
-          <div className="mt-2">
+          {(race.registration_url || race.race_url) && (
             <a
-              href={race.registration_url ?? race.race_url ?? ""}
+              href={race.registration_url ?? race.race_url ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-xs text-[#7cb87a] hover:text-[#d4845a] transition-colors"
+              className="flex items-center gap-1 text-[#7cb87a] hover:text-[#d4845a] transition-colors ml-auto"
             >
-              <ExternalLink className="h-3 w-3" />
-              {race.registration_url ? "Register" : "Race Info"}
+              <ExternalLink className="h-3.5 w-3.5" />
+              <span>{race.registration_url ? "Register" : "Race Info"}</span>
             </a>
-          </div>
-        )}
-
+          )}
+        </div>
       </div>
     </div>
   )

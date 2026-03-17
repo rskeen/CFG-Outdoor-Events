@@ -20,6 +20,7 @@ export default function AdminRacesPage() {
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingRace, setEditingRace] = useState<Race | undefined>(undefined)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const loadRaces = async () => {
     setLoading(true)
@@ -50,6 +51,16 @@ export default function AdminRacesPage() {
     }
   }
 
+  const handleDelete = async (race: Race) => {
+    if (!confirm(`Delete "${race.name}"? This cannot be undone.`)) return
+    setDeletingId(race.id)
+    const res = await fetch(`/api/admin/races/${race.id}`, { method: "DELETE" })
+    if (res.ok) {
+      setRaces((prev) => prev.filter((r) => r.id !== race.id))
+    }
+    setDeletingId(null)
+  }
+
   const openAdd = () => {
     setEditingRace(undefined)
     setDialogOpen(true)
@@ -58,13 +69,6 @@ export default function AdminRacesPage() {
   const openEdit = (race: Race) => {
     setEditingRace(race)
     setDialogOpen(true)
-  }
-  const handleDelete = async (race: Race) => {
-    if (!confirm(`Delete "${race.name}"? This cannot be undone.`)) return
-    const res = await fetch(`/api/admin/races/${race.id}`, { method: "DELETE" })
-    if (res.ok) {
-      setRaces((prev) => prev.filter((r) => r.id !== race.id))
-    }
   }
 
   return (
@@ -90,24 +94,12 @@ export default function AdminRacesPage() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-700">
-                  Name
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-700">
-                  Date
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-700">
-                  Type
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-700">
-                  Location
-                </th>
-                <th className="text-center px-4 py-3 font-medium text-gray-700">
-                  Active
-                </th>
-                <th className="text-right px-4 py-3 font-medium text-gray-700">
-                  Actions
-                </th>
+                <th className="text-left px-4 py-3 font-medium text-gray-700">Name</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-700">Date</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-700">Type</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-700">Location</th>
+                <th className="text-center px-4 py-3 font-medium text-gray-700">Active</th>
+                <th className="text-right px-4 py-3 font-medium text-gray-700">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -125,9 +117,7 @@ export default function AdminRacesPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-gray-600">
-                    {[race.location_city, race.location_state]
-                      .filter(Boolean)
-                      .join(", ")}
+                    {[race.location_city, race.location_state].filter(Boolean).join(", ")}
                   </td>
                   <td className="px-4 py-3 text-center">
                     <Switch
@@ -136,23 +126,25 @@ export default function AdminRacesPage() {
                     />
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => openEdit(race)}
-                      className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                                      <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(race)}
-                      className="text-red-400 hover:text-red-600 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openEdit(race)}
+                        className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(race)}
+                        disabled={deletingId === race.id}
+                        className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
