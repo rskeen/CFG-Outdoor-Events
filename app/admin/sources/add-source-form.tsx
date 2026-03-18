@@ -77,7 +77,7 @@ export function AddSourceForm({ onSuccess, onCancel }: AddSourceFormProps) {
       body: JSON.stringify({
         name: name || new URL(url).hostname,
         url,
-        race_type: raceType || null,
+        race_type: raceType === "all" ?  null : raceType || null,
         render_method: renderMethod,
         field_map: fieldMap,
         geo_filter: geoFilter,
@@ -139,7 +139,7 @@ export function AddSourceForm({ onSuccess, onCancel }: AddSourceFormProps) {
               <SelectValue placeholder="Any type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any type</SelectItem>
+              <SelectItem value="all">Any type</SelectItem>
               {["trail", "ultra", "ocr", "adventure", "orienteering", "mtb", "gravel", "other"].map((t) => (
                 <SelectItem key={t} value={t}>{t}</SelectItem>
               ))}

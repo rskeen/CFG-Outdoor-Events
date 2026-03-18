@@ -2,10 +2,9 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { formatDate, formatDistance } from "@/lib/utils"
 import { RegisterButton } from "./register-button"
-import type { Race, Registration, Profile } from "@/lib/types"
+import type { Race, Registration } from "@/lib/types"
 import {
   MapPin,
   Navigation,
@@ -59,7 +58,7 @@ export default async function RacePage({ params }: PageProps) {
       {/* Back */}
       <Link
         href="/"
-        className="text-sm text-[#8a9e8a] hover:text-[#e8ede8] mb-6 inline-block"
+        className="text-sm text-[#6E6860] hover:text-[#1C1C1A] mb-6 inline-block"
       >
         ← Back to races
       </Link>
@@ -70,29 +69,32 @@ export default async function RacePage({ params }: PageProps) {
           {r.race_type && <Badge variant={r.race_type}>{r.race_type}</Badge>}
         </div>
         <h1
-          className="text-4xl font-bold text-[#e8ede8] leading-tight"
+          className="text-4xl font-bold text-[#1C1C1A] leading-tight"
           style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
         >
           {r.name}
         </h1>
+        {r.summary && (
+          <p className="text-[#6E6860] italic mt-2 text-base">{r.summary}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Key info */}
-          <div className="rounded-lg border border-[#2e4530] bg-[#1a2b1c] p-5 space-y-3">
-            <div className="flex items-center gap-2 text-[#e8ede8]">
-              <Calendar className="h-4 w-4 text-[#7cb87a]" />
+          <div className="rounded-lg border border-[#D6D0C8] bg-white p-5 space-y-3 shadow-sm">
+            <div className="flex items-center gap-2 text-[#1C1C1A]">
+              <Calendar className="h-4 w-4 text-[#1E5B3A]" />
               <span>{formatDate(r.date)}</span>
               {r.end_date && r.end_date !== r.date && (
-                <span className="text-[#8a9e8a]">– {formatDate(r.end_date)}</span>
+                <span className="text-[#6E6860]">– {formatDate(r.end_date)}</span>
               )}
             </div>
 
             {(r.location_city || r.location_state || r.location_name) && (
-              <div className="flex items-center gap-2 text-[#e8ede8]">
-                <MapPin className="h-4 w-4 text-[#7cb87a]" />
+              <div className="flex items-center gap-2 text-[#1C1C1A]">
+                <MapPin className="h-4 w-4 text-[#1E5B3A]" />
                 <span>
                   {[r.location_name, r.location_city, r.location_state]
                     .filter(Boolean)
@@ -102,7 +104,7 @@ export default async function RacePage({ params }: PageProps) {
             )}
 
             {r.distance_miles_from_woodstock != null && (
-              <div className="flex items-center gap-2 text-[#8a9e8a]">
+              <div className="flex items-center gap-2 text-[#6E6860]">
                 <Navigation className="h-4 w-4" />
                 <span>
                   {formatDistance(r.distance_miles_from_woodstock)} from
@@ -112,8 +114,8 @@ export default async function RacePage({ params }: PageProps) {
             )}
 
             {(r.cost_min != null || r.cost_max != null) && (
-              <div className="flex items-center gap-2 text-[#e8ede8]">
-                <DollarSign className="h-4 w-4 text-[#7cb87a]" />
+              <div className="flex items-center gap-2 text-[#1C1C1A]">
+                <DollarSign className="h-4 w-4 text-[#1E5B3A]" />
                 <span>
                   {r.cost_min != null && r.cost_max != null
                     ? r.cost_min === r.cost_max
@@ -129,14 +131,14 @@ export default async function RacePage({ params }: PageProps) {
 
           {/* Description */}
           {r.description && (
-            <div className="rounded-lg border border-[#2e4530] bg-[#1a2b1c] p-5">
+            <div className="rounded-lg border border-[#D6D0C8] bg-white p-5 shadow-sm">
               <h2
-                className="text-xl font-semibold text-[#e8ede8] mb-3"
+                className="text-xl font-semibold text-[#1C1C1A] mb-3"
                 style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
               >
                 About this Race
               </h2>
-              <p className="text-[#8a9e8a] whitespace-pre-wrap leading-relaxed">
+              <p className="text-[#6E6860] whitespace-pre-wrap leading-relaxed">
                 {r.description}
               </p>
             </div>
@@ -144,7 +146,7 @@ export default async function RacePage({ params }: PageProps) {
 
           {/* Map */}
           {hasCoords && (
-            <div className="rounded-lg border border-[#2e4530] overflow-hidden">
+            <div className="rounded-lg border border-[#D6D0C8] overflow-hidden shadow-sm">
               {mapsKey ? (
                 <iframe
                   width="100%"
@@ -160,7 +162,7 @@ export default async function RacePage({ params }: PageProps) {
                   href={`https://www.google.com/maps?q=${r.lat},${r.lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center h-24 bg-[#1a2b1c] text-[#7cb87a] hover:text-[#e8ede8] gap-2"
+                  className="flex items-center justify-center h-24 bg-[#EDE9E2] text-[#1E5B3A] hover:text-[#1C1C1A] gap-2"
                 >
                   <MapPin className="h-5 w-5" />
                   View on Google Maps
@@ -173,7 +175,7 @@ export default async function RacePage({ params }: PageProps) {
         {/* Sidebar */}
         <div className="space-y-4">
           {/* Register button */}
-          <div className="rounded-lg border border-[#2e4530] bg-[#1a2b1c] p-5">
+          <div className="rounded-lg border border-[#D6D0C8] bg-white p-5 shadow-sm">
             <RegisterButton
               raceId={r.id}
               initiallyRegistered={userRegistered}
@@ -186,7 +188,7 @@ export default async function RacePage({ params }: PageProps) {
                 href={r.registration_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 flex items-center justify-center gap-2 w-full rounded-md border border-[#2e4530] px-4 py-2 text-sm text-[#e8ede8] hover:bg-[#243826] transition-colors"
+                className="mt-3 flex items-center justify-center gap-2 w-full rounded-md border border-[#D6D0C8] px-4 py-2 text-sm text-[#1C1C1A] hover:bg-[#EDE9E2] transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
                 Official Registration
@@ -198,7 +200,7 @@ export default async function RacePage({ params }: PageProps) {
                 href={r.race_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 flex items-center justify-center gap-2 w-full rounded-md px-4 py-2 text-sm text-[#8a9e8a] hover:text-[#e8ede8] transition-colors"
+                className="mt-2 flex items-center justify-center gap-2 w-full rounded-md border border-[#1E5B3A] px-4 py-2 text-sm text-[#1E5B3A] hover:bg-[#1E5B3A] hover:text-white transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
                 Race Website
@@ -207,22 +209,22 @@ export default async function RacePage({ params }: PageProps) {
           </div>
 
           {/* Group members */}
-          <div className="rounded-lg border border-[#2e4530] bg-[#1a2b1c] p-5">
+          <div className="rounded-lg border border-[#D6D0C8] bg-white p-5 shadow-sm">
             <h2
-              className="text-lg font-semibold text-[#e8ede8] mb-3 flex items-center gap-2"
+              className="text-lg font-semibold text-[#1C1C1A] mb-3 flex items-center gap-2"
               style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
-              <Users className="h-4 w-4 text-[#7cb87a]" />
+              <Users className="h-4 w-4 text-[#1E5B3A]" />
               CFG Members In ({registrationCount})
             </h2>
             {regs.length === 0 ? (
-              <p className="text-sm text-[#8a9e8a]">
+              <p className="text-sm text-[#6E6860]">
                 No one yet — be the first!
               </p>
             ) : (
               <ul className="space-y-1">
                 {regs.map((reg) => (
-                  <li key={reg.id} className="text-sm text-[#e8ede8]">
+                  <li key={reg.id} className="text-sm text-[#1C1C1A]">
                     {reg.profiles?.display_name ?? "Anonymous"}
                   </li>
                 ))}

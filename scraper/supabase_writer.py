@@ -1,10 +1,12 @@
 """
 Upserts normalized race data into Supabase.
-Deduplicates by (name + date).
+Deduplicates by (normalized_name + date) to handle slight name variations
+like "OMAR" vs "OMAR Adventure Race".
 Computes distance_from_woodstock for each race.
 """
 
 import os
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -16,6 +18,30 @@ def get_client() -> Client:
     url = os.environ["SUPABASE_URL"]
     key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
     return create_client(url, key)
+
+
+def normalize_name(name: str) -> str:
+    """
+    Normalize a race name for fuzzy deduplication.
+    Lowercases, strips common suffixes, and removes extra whitespace.
+    e.g. "OMAR Adventure Race 2026" -> "omar"
+         "OMAR" -> "omar"
+    """
+    name = name.lower().strip()
+    # Remove year (4-digit numbers)
+    name = re.sub(r"\b\d{4}\b", "", name)
+    # Remove common generic suffixes
+    suffixes = [
+        "adventure race", "adventure run", "trail race", "trail run",
+        "ultra marathon", "ultramarathon", "marathon", "half marathon",
+        "obstacle course race", "obstacle race", "mud run",
+        "endurance race", "endurance run", "race", "run", "event",
+    ]
+    for suffix in suffixes:
+        name = re.sub(rf"\b{re.escape(suffix)}\b", "", name)
+    # Collapse whitespace
+    name = re.sub(r"\s+", " ", name).strip()
+    return name
 
 
 def upsert_races(
@@ -35,6 +61,10 @@ def upsert_races(
     client = get_client()
     source_id = source.get("id")
     counts = {"inserted": 0, "updated": 0, "skipped": 0}
+
+    # Fetch all existing races for this date range to enable fuzzy matching
+    existing_races_result = client.table("races").select("id, name, date").execute()
+    existing_races = existing_races_result.data or []
 
     for race in races:
         name = race.get("name", "").strip()
@@ -81,23 +111,29 @@ def upsert_races(
             "manually_added": False,
         }
 
-        # Check for existing race by name + date
-        existing = (
-            client.table("races")
-            .select("id")
-            .eq("name", name)
-            .eq("date", date)
-            .execute()
-        )
+        # Fuzzy deduplicate: match on same date + normalized name prefix
+        norm_new = normalize_name(name)
+        matched_id = None
+        for existing in existing_races:
+            if existing["date"] != date:
+                continue
+            norm_existing = normalize_name(existing["name"])
+            # Match if either normalized name starts with the other
+            if norm_new and norm_existing and (
+                norm_existing.startswith(norm_new)
+                or norm_new.startswith(norm_existing)
+                or norm_new == norm_existing
+            ):
+                matched_id = existing["id"]
+                break
 
-        if existing.data:
-            # Update existing
-            race_id = existing.data[0]["id"]
-            client.table("races").update(record).eq("id", race_id).execute()
+        if matched_id:
+            client.table("races").update(record).eq("id", matched_id).execute()
             counts["updated"] += 1
         else:
-            # Insert new
-            client.table("races").insert(record).execute()
+            result = client.table("races").insert(record).execute()
+            if result.data:
+                existing_races.append({"id": result.data[0]["id"], "name": name, "date": date})
             counts["inserted"] += 1
 
     return counts

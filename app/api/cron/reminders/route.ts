@@ -18,13 +18,6 @@ function addMonths(date: Date, months: number): Date {
   return d
 }
 
-function isSameDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  )
-}
 
 export async function GET(request: NextRequest) {
   // Validate cron secret

@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils"
 
 const variantStyles: Record<string, string> = {
-  trail: "bg-green-400 text-green-950",
-  ultra: "bg-green-800 text-white",
-  ocr: "bg-orange-500 text-white",
-  adventure: "bg-red-500 text-white",
-  orienteering: "bg-teal-500 text-white",
-  mtb: "bg-yellow-900 text-white",
-  gravel: "bg-amber-600 text-white",
-  other: "bg-gray-500 text-white",
+  trail: "bg-emerald-100 text-emerald-800 border border-emerald-200",
+  ultra: "bg-green-900 text-white border border-green-800",
+  ocr: "bg-orange-100 text-orange-800 border border-orange-200",
+  adventure: "bg-red-100 text-red-800 border border-red-200",
+  orienteering: "bg-teal-100 text-teal-800 border border-teal-200",
+  mtb: "bg-amber-100 text-amber-900 border border-amber-200",
+  gravel: "bg-yellow-100 text-yellow-800 border border-yellow-200",
+  other: "bg-stone-100 text-stone-700 border border-stone-200",
 }
 
 interface BadgeProps {

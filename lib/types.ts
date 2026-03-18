@@ -27,6 +27,7 @@ export interface Race {
   lng: number | null
   distance_miles_from_woodstock: number | null
   description: string | null
+  summary: string | null
   registration_url: string | null
   race_url: string | null
   cost_min: number | null

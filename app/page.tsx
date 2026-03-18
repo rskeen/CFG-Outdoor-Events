@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { RaceList } from "@/components/race/race-list"
 import type { Race } from "@/lib/types"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 
 export default async function Home() {
   const supabase = createClient()
@@ -50,12 +50,12 @@ export default async function Home() {
     <div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">
         <h1
-          className="text-4xl font-bold text-[#7cb87a]"
+          className="text-4xl font-bold text-[#1E5B3A]"
           style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
         >
           Upcoming Races
         </h1>
-        <p className="text-[#8a9e8a] mt-1">
+        <p className="text-[#6E6860] mt-1">
           Outdoor endurance events in the Southeast US
         </p>
       </div>

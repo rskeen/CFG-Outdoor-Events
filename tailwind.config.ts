@@ -10,22 +10,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#0f1710",
-        surface: "#1a2b1c",
-        "surface-2": "#243826",
-        accent: "#7cb87a",
-        "accent-warm": "#d4845a",
-        "text-primary": "#e8ede8",
-        "text-muted": "#8a9e8a",
-        border: "#2e4530",
-        // Race type colors
-        trail: "#4ade80",
-        ultra: "#166534",
-        ocr: "#f97316",
-        adventure: "#ef4444",
-        orienteering: "#14b8a6",
+        bg: "#F7F4EF",
+        surface: "#FFFFFF",
+        "surface-2": "#EDE9E2",
+        accent: "#1E5B3A",
+        "accent-warm": "#C4602A",
+        "text-primary": "#1C1C1A",
+        "text-muted": "#6E6860",
+        border: "#D6D0C8",
+        // Race type colors (adjusted for light backgrounds)
+        trail: "#166534",
+        ultra: "#14532d",
+        ocr: "#c2410c",
+        adventure: "#b91c1c",
+        orienteering: "#0f766e",
         mtb: "#92400e",
-        gravel: "#d97706",
+        gravel: "#b45309",
       },
       fontFamily: {
         display: ["Barlow Condensed", "Bebas Neue", "sans-serif"],
@@ -33,7 +33,7 @@ const config: Config = {
         sans: ["IBM Plex Sans", "Source Sans 3", "sans-serif"],
       },
       borderColor: {
-        DEFAULT: "#2e4530",
+        DEFAULT: "#D6D0C8",
       },
     },
   },

@@ -62,10 +62,10 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
 
   const service = getServiceClient()
 
-  // Soft delete — set is_active = false
+  // Hard delete — permanently remove the race and its registrations (cascade)
   const { error } = await service
     .from("races")
-    .update({ is_active: false, updated_at: new Date().toISOString() })
+    .delete()
     .eq("id", params.id)
 
   if (error) {

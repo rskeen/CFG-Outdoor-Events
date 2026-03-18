@@ -9,10 +9,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<string, string> = {
-  default: "bg-[#d4845a] hover:bg-[#c07040] text-white",
-  outline: "border border-[#2e4530] text-[#e8ede8] hover:bg-[#243826]",
-  ghost: "text-[#e8ede8] hover:bg-[#243826]",
-  secondary: "bg-[#243826] text-[#e8ede8] hover:bg-[#2e4530]",
+  default: "bg-[#C4602A] hover:bg-[#a84e22] text-white",
+  outline: "border border-[#D6D0C8] text-[#1C1C1A] hover:bg-[#EDE9E2]",
+  ghost: "text-[#1C1C1A] hover:bg-[#EDE9E2]",
+  secondary: "bg-[#EDE9E2] text-[#1C1C1A] hover:bg-[#D6D0C8]",
   destructive: "bg-red-600 hover:bg-red-700 text-white",
 }
 
@@ -39,7 +39,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#7cb87a] focus:ring-offset-2 focus:ring-offset-[#0f1710] disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
+          "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#1E5B3A] focus:ring-offset-2 focus:ring-offset-[#F7F4EF] disabled:opacity-50 disabled:pointer-events-none cursor-pointer",
           variants[variant],
           sizes[size],
           className

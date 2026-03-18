@@ -2,13 +2,14 @@
 
 import { useState } from "react"
 import { RaceCard } from "@/components/race/race-card"
+import { RaceCalendar } from "@/components/race/race-calendar"
 import {
   RaceFilters,
   type FiltersState,
   type RaceTypeFilter,
 } from "@/components/race/race-filters"
 import type { Race } from "@/lib/types"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { ChevronDown, ChevronUp, LayoutList, CalendarDays } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface RaceListProps {
@@ -36,6 +37,15 @@ function applyFilters(
     // Only mine
     if (filters.onlyMine && !race.user_registered) return false
 
+    // Distance filter
+    if (
+      filters.maxDistance !== null &&
+      race.distance_miles_from_woodstock != null &&
+      race.distance_miles_from_woodstock > filters.maxDistance
+    ) {
+      return false
+    }
+
     // Date range
     if (filters.dateRange === "upcoming") {
       if (raceDate < now) return false
@@ -58,8 +68,10 @@ export function RaceList({ races, currentUserId }: RaceListProps) {
     state: "",
     onlyMine: false,
     dateRange: "upcoming",
+    maxDistance: 400,
   })
   const [showPast, setShowPast] = useState(false)
+  const [view, setView] = useState<"list" | "calendar">("list")
 
   const now = new Date()
   now.setHours(0, 0, 0, 0)
@@ -89,8 +101,38 @@ export function RaceList({ races, currentUserId }: RaceListProps) {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {filteredUpcoming.length === 0 ? (
-          <div className="text-center py-16 text-[#8a9e8a]">
+        {/* View toggle */}
+        <div className="flex justify-end mb-4">
+          <div className="inline-flex rounded-md border border-[#D6D0C8] overflow-hidden">
+            <button
+              onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition-colors ${
+                view === "list"
+                  ? "bg-[#1E5B3A] text-white"
+                  : "bg-white text-[#6E6860] hover:bg-[#EDE9E2]"
+              }`}
+            >
+              <LayoutList className="h-4 w-4" />
+              List
+            </button>
+            <button
+              onClick={() => setView("calendar")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border-l border-[#D6D0C8] transition-colors ${
+                view === "calendar"
+                  ? "bg-[#1E5B3A] text-white"
+                  : "bg-white text-[#6E6860] hover:bg-[#EDE9E2]"
+              }`}
+            >
+              <CalendarDays className="h-4 w-4" />
+              Calendar
+            </button>
+          </div>
+        </div>
+
+        {view === "calendar" ? (
+          <RaceCalendar races={filteredUpcoming} currentUserId={currentUserId} />
+        ) : filteredUpcoming.length === 0 ? (
+          <div className="text-center py-16 text-[#6E6860]">
             <p className="text-lg">No races found matching your filters.</p>
             <p className="text-sm mt-1">Try adjusting your filters.</p>
           </div>
@@ -106,12 +148,12 @@ export function RaceList({ races, currentUserId }: RaceListProps) {
           </div>
         )}
 
-        {/* Past events */}
-        {past.length > 0 && (
+        {/* Past events — only in list view */}
+        {view === "list" && past.length > 0 && (
           <div className="mt-10">
             <Button
               variant="ghost"
-              className="flex items-center gap-2 text-[#8a9e8a] mb-4"
+              className="flex items-center gap-2 text-[#6E6860] mb-4"
               onClick={() => setShowPast((v) => !v)}
             >
               {showPast ? (
