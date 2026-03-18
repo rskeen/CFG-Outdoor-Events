@@ -4,6 +4,7 @@ Normalizes raw scraped data into structured race objects using Claude.
 
 import json
 import os
+from datetime import date
 from typing import Any
 
 import anthropic
@@ -33,7 +34,8 @@ Rules:
 - If you cannot determine a required field (name, date), omit that race entirely
 - Infer lat/lng from city/state only if very confident
 - Normalize dates to YYYY-MM-DD even if given in other formats
-- If a year is not specified, assume the next upcoming occurrence
+- Use the page context (e.g. "2025-2026 Schedule" header) to assign the correct year to undated events
+- SKIP any event whose date is before TODAY'S DATE (provided in the user prompt) — only return future/upcoming events
 - For race_type, infer from event name/description if not explicit
 - Return [] if no valid races found
 - Do NOT include markdown, only raw JSON"""
@@ -71,10 +73,12 @@ def normalize_races(
     source_url = source.get("url", "")
     default_type = source.get("race_type", "")
 
+    today = date.today().isoformat()  # e.g. "2026-03-17"
     user_prompt = (
         f"Source: {source_name}\n"
         f"Source URL: {source_url}\n"
-        f"Default race type hint: {default_type or 'not specified'}\n\n"
+        f"Default race type hint: {default_type or 'not specified'}\n"
+        f"TODAY'S DATE: {today} — skip any event with a date before this\n\n"
         f"Raw scraped content:\n{raw_text}"
     )
 
