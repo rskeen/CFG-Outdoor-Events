@@ -5,14 +5,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 :root {
-  --bg: #0f1710;
-  --surface: #1a2b1c;
-  --surface-2: #243826;
-  --accent: #7cb87a;
-  --accent-warm: #d4845a;
-  --text: #e8ede8;
-  --text-muted: #8a9e8a;
-  --border: #2e4530;
+  --bg: #F7F4EF;
+  --surface: #FFFFFF;
+  --surface-2: #EDE9E2;
+  --accent: #1E5B3A;
+  --accent-warm: #C4602A;
+  --text: #1C1C1A;
+  --text-muted: #6E6860;
+  --border: #D6D0C8;
 }
 
 body {

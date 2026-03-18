@@ -52,12 +52,12 @@ export function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-[#2e4530] bg-[#0f1710]/95 backdrop-blur-sm">
+    <nav className="sticky top-0 z-40 border-b border-[#D6D0C8] bg-[#F7F4EF]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center">
             <span
-              className="text-2xl font-bold tracking-wider text-[#7cb87a]"
+              className="text-2xl font-bold tracking-wider text-[#1E5B3A]"
               style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
               CFG OUTDOOR EVENTS
@@ -67,7 +67,7 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             {user ? (
               <>
-                <span className="text-sm text-[#8a9e8a] hidden sm:block">
+                <span className="text-sm text-[#6E6860] hidden sm:block">
                   {profile?.display_name ?? user.email}
                 </span>
                 <Link href="/dashboard">

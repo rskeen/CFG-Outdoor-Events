@@ -23,6 +23,7 @@ Return ONLY a valid JSON array of race objects. Each race object should have the
 - lng: number | null (decimal degrees)
 - race_type: string | null (one of: trail, ultra, ocr, adventure, orienteering, mtb, gravel, other)
 - description: string | null (brief description, max 500 chars)
+- summary: string | null (1-sentence summary covering race style, approximate distance/duration, and team structure if known. Example: "A 10-mile solo trail race through mountain terrain with optional relay divisions.")
 - registration_url: string | null (full URL)
 - race_url: string | null (full URL to race details)
 - cost_min: number | null (minimum registration cost in USD)

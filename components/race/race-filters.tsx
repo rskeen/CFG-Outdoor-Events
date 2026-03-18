@@ -29,6 +29,7 @@ export interface FiltersState {
   state: string
   onlyMine: boolean
   dateRange: DateRange
+  maxDistance: number | null
 }
 
 const RACE_TYPES: RaceTypeFilter[] = [
@@ -71,7 +72,7 @@ export function RaceFilters({
   }
 
   return (
-    <div className="sticky top-16 z-30 bg-[#0f1710]/95 backdrop-blur-sm border-b border-[#2e4530] py-3">
+    <div className="sticky top-16 z-30 bg-[#F7F4EF]/95 backdrop-blur-sm border-b border-[#D6D0C8] py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
         {/* Race type pills */}
         <div className="flex flex-wrap gap-2">
@@ -92,7 +93,7 @@ export function RaceFilters({
           {filters.types.length > 0 && (
             <button
               onClick={() => setFilters((prev) => ({ ...prev, types: [] }))}
-              className="text-xs text-[#8a9e8a] hover:text-[#e8ede8] underline"
+              className="text-xs text-[#6E6860] hover:text-[#1C1C1A] underline"
             >
               clear
             </button>
@@ -149,6 +150,28 @@ export function RaceFilters({
             </Select>
           </div>
 
+          {/* Distance filter */}
+          <div className="w-44">
+            <Select
+              value={filters.maxDistance === null ? "any" : String(filters.maxDistance)}
+              onValueChange={(val) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  maxDistance: val === "any" ? null : Number(val),
+                }))
+              }
+            >
+              <SelectTrigger className="h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="400">Within 6 hrs (~400 mi)</SelectItem>
+                <SelectItem value="520">Within 8 hrs (~520 mi)</SelectItem>
+                <SelectItem value="any">Any distance</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Only my races */}
           {isLoggedIn && (
             <div className="flex items-center gap-2">
@@ -159,7 +182,7 @@ export function RaceFilters({
                   setFilters((prev) => ({ ...prev, onlyMine: checked }))
                 }
               />
-              <Label htmlFor="only-mine" className="text-xs cursor-pointer">
+              <Label htmlFor="only-mine" className="text-xs cursor-pointer text-[#6E6860]">
                 Only my races
               </Label>
             </div>

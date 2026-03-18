@@ -7,10 +7,10 @@ export const metadata: Metadata = {
   title: "CFG Outdoor Events",
   description: "Track outdoor endurance races across the Southeast US",
   manifest: "/manifest.json",
-  themeColor: "#0f1710",
+  themeColor: "#F7F4EF",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "CFG Events",
   },
   viewport: {
@@ -35,7 +35,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-screen bg-[#0f1710] text-[#e8ede8] antialiased">
+      <body className="min-h-screen bg-[#F7F4EF] text-[#1C1C1A] antialiased">
         <Navbar />
         <main>{children}</main>
         <ServiceWorkerRegistration />
